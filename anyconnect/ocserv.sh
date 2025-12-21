@@ -6,8 +6,8 @@ export PATH
 #	System Required: Debian/Ubuntu
 #	Description: ocserv AnyConnect
 #	Version: 1.0.5
-#	Author: Toyo
-#	Blog: https://doub.io/vpnzy-7/
+#	Author: jscat01
+#	Blog: https://github.com/jscat01
 #=================================================
 sh_ver="1.0.5"
 file="/usr/local/sbin/ocserv"
@@ -238,8 +238,8 @@ Set_username(){
 }
 Set_passwd(){
 	echo "请输入 要添加的VPN账号 密码"
-	read -e -p "(默认: doub.io):" userpass
-	[[ -z "${userpass}" ]] && userpass="doub.io"
+	read -e -p "(默认: jscat.01):" userpass
+	[[ -z "${userpass}" ]] && userpass="jscat.01"
 	echo && echo -e "	密码 : ${Red_font_prefix}${userpass}${Font_color_suffix}" && echo
 }
 Set_tcp_port(){
@@ -517,7 +517,7 @@ Update_Shell(){
 check_sys
 [[ ${release} != "debian" ]] && [[ ${release} != "ubuntu" ]] && echo -e "${Error} 本脚本不支持当前系统 ${release} !" && exit 1
 echo && echo -e " ocserv 一键安装管理脚本 ${Red_font_prefix}[v${sh_ver}]${Font_color_suffix}
-  -- Toyo | doub.io/vpnzy-7 --
+  -- Jscat01 | github.com/jscat01/maxdo --
   
  ${Green_font_prefix}0.${Font_color_suffix} 升级脚本
 ————————————
