@@ -1,5 +1,7 @@
 Anyconnect VPN 一键安装管理脚本  原始来自ToyoDAdoubiBackup，由于版本太低，所以在此基础上添加了ocserv最新版本选择。
 安装链接：sudo wget -N --no-check-certificate https://raw.githubusercontent.com/jscat01/maxdo/master/anyconnect/ocserv.sh && chmod +x ocserv.sh && bash ocserv.sh
+
+
 可能会提示 ocser.sh无权限运行,手动添加权限。
 sudo chmod +x ocserv.sh
 
