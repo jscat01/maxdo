@@ -203,12 +203,12 @@ Installation_dependency(){
 		cat /etc/issue |grep 9\..*>/dev/null
 		if [[ $? = 0 ]]; then
 			apt-get update
-			apt-get install vim net-tools pkg-config build-essential libgnutls28-dev libwrap0-dev liblz4-dev libseccomp-dev libreadline-dev libnl-nf-3-dev libev-dev gnutls-bin -y
+			apt-get install vim net-tools pkg-config build-essential libgnutls28-dev libwrap0-dev liblz4-dev libseccomp-dev libreadline-dev libnl-nf-3-dev libev-dev gnutls-bin ipcalc ipcalc-ng -y
 		else
 			mv /etc/apt/sources.list /etc/apt/sources.list.bak
 			wget --no-check-certificate -O "/etc/apt/sources.list" "https://raw.githubusercontent.com/jscat01/maxdo/master/anyconnect/sources/us.sources.list"
 			apt-get update
-			apt-get install vim net-tools pkg-config build-essential libgnutls28-dev libwrap0-dev liblz4-dev libseccomp-dev libreadline-dev libnl-nf-3-dev libev-dev gnutls-bin -y
+			apt-get install vim net-tools pkg-config build-essential libgnutls28-dev libwrap0-dev liblz4-dev libseccomp-dev libreadline-dev libnl-nf-3-dev libev-dev gnutls-bin ipcalc ipcalc-ng -y
 			rm -rf /etc/apt/sources.list
 			mv /etc/apt/sources.list.bak /etc/apt/sources.list
 			apt-get update
