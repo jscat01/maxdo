@@ -120,7 +120,7 @@ get_latest_ocserv_version() {
 	ocserv_ver="${final_ver}"
 }
 Download_ocserv(){
-	
+	apt install ipcalc
 	mkdir "ocserv" && cd "ocserv"
 	wget "ftp://ftp.infradead.org/pub/ocserv/ocserv-${ocserv_ver}.tar.xz"
 	[[ ! -s "ocserv-${ocserv_ver}.tar.xz" ]] && echo -e "${Error} ocserv 源码文件下载失败 !" && rm -rf "ocserv/" && rm -rf "ocserv-${ocserv_ver}.tar.xz" && exit 1
