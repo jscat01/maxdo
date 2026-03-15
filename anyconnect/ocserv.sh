@@ -5,17 +5,17 @@ export PATH
 #=================================================
 #	System Required: Debian/Ubuntu
 #	Description: ocserv AnyConnect
-#	Version: 1.0.5
+#	Version: 1.1.2
 #	Author: jscat01
 #	Blog: https://github.com/jscat01
 #=================================================
-sh_ver="1.0.5"
+sh_ver="1.1.2"
 file="/usr/local/sbin/ocserv"
 conf_file="/etc/ocserv"
 conf="/etc/ocserv/ocserv.conf"
 passwd_file="/etc/ocserv/ocpasswd"
 log_file="/tmp/ocserv.log"
-ocserv_ver="0.11.8"
+ocserv_ver="1.3.0"
 PID_FILE="/var/run/ocserv.pid"
 
 Green_font_prefix="\033[32m" && Red_font_prefix="\033[31m" && Green_background_prefix="\033[42;37m" && Red_background_prefix="\033[41;37m" && Font_color_suffix="\033[0m"
@@ -68,11 +68,63 @@ Get_ip(){
 		fi
 	fi
 }
+# 自动获取 ocserv 最新版本号（核心功能）
+get_latest_ocserv_version() {
+    echo -e "${OK} 正在获取 ocserv 最新版本号..."
+    # 解析官网下载页面，提取最新稳定版（过滤 beta/rc 测试版）
+    latest_ver=$(wget --no-check-certificate -q https://www.infradead.org/ocserv/download/ -O - | grep -o "ocserv-[0-9]\.[0-9]\.[0-9]\.tar\.xz" | grep -v "beta\|rc" | sed "s/ocserv-//; s/\.tar\.xz//" | sort -V | tail -1)
+    
+    # 容错：解析失败则默认备用版本
+    if [ -z "$latest_ver" ]; then
+        latest_ver="1.3.0"
+        echo -e "${YELLOW} 官网版本解析失败，默认备用版本：${latest_ver}"
+    else
+        echo -e "${GREEN} 检测到官网最新稳定版：${latest_ver}"
+    fi
+
+    # 显示版本选择菜单（核心交互逻辑）
+    echo -e "\n${BLUE} 请选择要安装的 ocserv 版本："
+    echo -e "  1) 使用最新版：${latest_ver}（推荐）"
+    echo -e "  2) 使用自定义版本（手动输入，如 0.11.8）"
+    echo -e "  3) 使用备用稳定版：1.3.0"
+    read -p "  请输入选择（1/2/3，默认1）：" choice
+
+    # 根据选择赋值最终版本
+    case "$choice" in
+        1|"" )  # 选1或直接回车，用最新版
+            final_ver="$latest_ver"
+            echo -e "${GREEN} 已选择：最新版 ${final_ver}"
+            ;;
+        2 )     # 选2，手动输入自定义版本
+            read -p "  请输入自定义版本号（如 0.11.8/1.2.0）：" custom_ver
+            # 验证版本格式（简单校验：x.x.x）
+            if [[ "$custom_ver" =~ ^[0-9]+\.[0-9]+\.[0-9]+$ ]]; then
+                final_ver="$custom_ver"
+                echo -e "${GREEN} 已选择：自定义版本 ${final_ver}"
+            else
+                echo -e "${RED} 版本格式错误（需为 x.x.x，如 1.3.0），退出！"
+                exit 1
+            fi
+            ;;
+        3 )     # 选3，用备用版本
+            final_ver="1.3.0"
+            echo -e "${GREEN} 已选择：备用稳定版 ${final_ver}"
+            ;;
+        * )     # 输入错误，默认用最新版
+            echo -e "${YELLOW} 输入无效，默认选择最新版 ${latest_ver}"
+            final_ver="$latest_ver"
+            ;;
+    esac
+
+    echo "$final_ver"  # 返回最终选择的版本
+	ocserv_ver="${final_ver}"
+}
 Download_ocserv(){
+	
 	mkdir "ocserv" && cd "ocserv"
 	wget "ftp://ftp.infradead.org/pub/ocserv/ocserv-${ocserv_ver}.tar.xz"
 	[[ ! -s "ocserv-${ocserv_ver}.tar.xz" ]] && echo -e "${Error} ocserv 源码文件下载失败 !" && rm -rf "ocserv/" && rm -rf "ocserv-${ocserv_ver}.tar.xz" && exit 1
-	tar -xJf ocserv-0.11.8.tar.xz && cd ocserv-0.11.8
+	tar -xJf ocserv-1.3.0.tar.xz && cd ocserv-1.3.0
 	./configure
 	make
 	make install
@@ -171,6 +223,8 @@ Install_ocserv(){
 	[[ -e ${file} ]] && echo -e "${Error} ocserv 已安装，请检查 !" && exit 1
 	echo -e "${Info} 开始安装/配置 依赖..."
 	Installation_dependency
+	echo -e "${Info} 自动获取 ocserv 最新版本号（核心功能)..."
+	get_latest_ocserv_version
 	echo -e "${Info} 开始下载/安装 配置文件..."
 	Download_ocserv
 	echo -e "${Info} 开始下载/安装 服务脚本(init)..."
